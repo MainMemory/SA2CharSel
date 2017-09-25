@@ -13,70 +13,6 @@ AnimationInfo DarkChaoWalkerAnimList2[ChaosAnimList_Length];
 AnimationInfo EggmanAnimList2[ChaosAnimList_Length];
 AnimationInfo SonicAnimList2[ChaosAnimList_Length];
 
-void Init(const char *path, const HelperFunctions &helperFunctions)
-{
-	AnimationInfo *buf = TailsAnimList2;
-	WriteData((void*)0x74CFD7, &buf, sizeof(buf));
-	memcpy(TailsAnimList2, TailsAnimList, TailsAnimList_Length * sizeof(AnimationInfo));
-
-	buf = MechEggmanAnimList2;
-	WriteData((void*)0x740D50, &buf, sizeof(buf));
-	memcpy(MechEggmanAnimList2, MechEggmanAnimList, MechEggmanAnimList_Length * sizeof(AnimationInfo));
-
-	buf = MechTailsAnimList2;
-	WriteData((void*)0x740FB0, &buf, sizeof(buf));
-	memcpy(MechTailsAnimList2, MechTailsAnimList, MechTailsAnimList_Length * sizeof(AnimationInfo));
-
-	buf = ChaoWalkerAnimList2;
-	WriteData((void*)0x7411DC, &buf, sizeof(buf));
-	memcpy(ChaoWalkerAnimList2, ChaoWalkerAnimList, ChaoWalkerAnimList_Length * sizeof(AnimationInfo));
-
-	buf = DarkChaoWalkerAnimList2;
-	WriteData((void*)0x7413BC, &buf, sizeof(buf));
-	memcpy(DarkChaoWalkerAnimList2, DarkChaoWalkerAnimList, DarkChaoWalkerAnimList_Length * sizeof(AnimationInfo));
-
-	buf = EggmanAnimList2;
-	WriteData((void*)0x73C2F2, &buf, sizeof(buf));
-	memcpy(EggmanAnimList2, EggmanAnimList, EggmanAnimList_Length * sizeof(AnimationInfo));
-
-	buf = SonicAnimList2;
-	WriteData((void*)0x716F0A, &buf, sizeof(buf));
-	memcpy(SonicAnimList2, SonicAnimList, SonicAnimList_Length * sizeof(AnimationInfo));
-}
-
-unsigned __int8 twobytenop[] = { 0x66, 0x90 };
-unsigned __int8 fivebytenop[] = { 0x66, 0x90, 0x66, 0x90, 0x90 };
-unsigned __int8 shortjmp[] = { 0xEB };
-
-PatchInfo patches[] = {
-	patchdecl(0x44E63B, twobytenop), // Dark Chao Walker Life Icon Patch
-	patchdecl(0x459110, twobytenop), // 2P Sound Effects Patch
-	patchdecl(0x45913B, twobytenop), // 2P Voice Patch
-	patchdecl(0x4CD255, twobytenop), // Sonic's Cannon's Core Control Patch
-	patchdecl(0x724261, shortjmp), // Sonic Boss Special Patch
-	patchdecl(0x736211, shortjmp), // Knuckles Boss Special Patch
-	patchdecl(0x7374E4, shortjmp), // Dry Lagoon Turtle Grab Patch
-	patchdecl(0x749921, shortjmp), // Mech Boss Special Patch
-	patchdecl(0x741690, shortjmp), // Dark Chao Walker Fix
-	patchdecl(0x7416DC, shortjmp), // Chao Walker Fix
-	patchdecl(0x728141, fivebytenop), // Knuckles emerald manager
-	patchdecl(0x728491, fivebytenop), // Rouge emerald manager
-	patchdecl(0x7288B7, fivebytenop), // Tikal emerald manager
-	patchdecl(0x728B64, fivebytenop), // Chaos emerald manager
-	patchdecl(0x716E13, twobytenop), // Amy
-	patchdecl(0x716F2C, twobytenop), // Sonic costume
-	patchdecl(0x717373, twobytenop), // Metal Sonic
-	patchdecl(0x71748C, twobytenop), // Shadow costume
-	patchdecl(0x728123, twobytenop), // Tikal
-	patchdecl(0x728241, twobytenop), // Knuckles costume
-	patchdecl(0x728473, twobytenop), // Chaos
-	patchdecl(0x728591, twobytenop), // Rouge costume
-	patchdecl(0x740C61, twobytenop), // Dark Chao Walker
-	patchdecl(0x740D72, twobytenop), // Eggman costume
-	patchdecl(0x740EC1, twobytenop), // Chao Walker
-	patchdecl(0x740FD2, twobytenop) // Tails costume
-};
-
 LevelCutscene *const stru_173A808 = (LevelCutscene*)0x173A808;
 signed int __cdecl sub_458970()
 {
@@ -2160,47 +2096,120 @@ label:
 	}
 }
 
-PointerInfo jumps[] = {
-	ptrdecl(0x458970, sub_458970), // Level Cutscene Function
-	ptrdecl(LoadCharacters, LoadCharacters_r), // LoadCharacters replacement
-	ptrdecl(0x757810, sub_757810), // Somersault Fix 1
-	ptrdecl(0x759A18, loc_759A18), // Somersault Fix 2
-	ptrdecl(LoadStartPositionPtr, LoadStartPosition_r), // LoadStartPosition replacement
-	ptrdecl(0x43DF30, sub_43DF30), // End position
-	ptrdecl(Load2PIntroPos, Load2PIntroPos_r), // 2P Intro position
-	ptrdecl(0x6193D0, sub_6193D0), // Sonic vs Shadow 1
-	ptrdecl(0x4C7100, sub_4C7100), // Sonic vs Shadow 2
-	ptrdecl(0x648690, sub_648690), // Knuckles vs Rouge
-	ptrdecl(0x626680, sub_626680), // Tails vs Eggman 1
-	ptrdecl(0x661CF0, sub_661CF0), // Tails vs Eggman 2
-	ptrdecl(0x727E5B, loc_727E5B), // 2P Race Bar
-	ptrdecl(0x6C63E7, loc_6C63E7), // Goal Ring
-	ptrdecl(0x43C9D0, 0x43CADF), // Tails/Eggman fix
-	ptrdecl(0x472A7D, loc_472A7D), // Title Card textures
-	ptrdecl(0x43EE5F, loc_43EE5F), // End Level voices
-	ptrdecl(0x532029, loc_532029), // Chao World sounds
-	ptrdecl(0x459236, loc_2800440), // Chao World voices
-	ptrdecl(0x72F4D6, KnucklesSunglassesFix),
-	ptrdecl(0x72F531, KnucklesAirNecklaceFix),
-	ptrdecl(0x744914, EggmanLaserBlasterFix),
-	ptrdecl(0x744E02, EggmanLargeCannonFix),
-	ptrdecl(0x748168, TailsLaserBlasterFix),
-	ptrdecl(0x74861A, TailsBazookaFix),
-	ptrdecl(0x4EB2B0, InitSplitscreen)
-};
+extern "C"
+{
+	__declspec(dllexport) void Init(const char *path, const HelperFunctions &helperFunctions)
+	{
+		AnimationInfo *buf = TailsAnimList2;
+		WriteData((AnimationInfo**)0x74CFD7, buf);
+		memcpy(TailsAnimList2, TailsAnimList, TailsAnimList_Length * sizeof(AnimationInfo));
 
-PointerInfo calls[] = {
-	ptrdecl(0x729D16, Knuckles_LevelBounds_r),
-	ptrdecl(0x729DC5, Knuckles_LevelBounds_r),
-	ptrdecl(0x72B0F1, Knuckles_LevelBounds_r),
-	ptrdecl(0x72B2E8, Knuckles_LevelBounds_r),
-	ptrdecl(0x4D45F0, LoadAquaticMineCharAnims_r),
-	ptrdecl(0x63D727, LoadDryLagoonCharAnims_r),
-	ptrdecl(0x4DB351, LoadCannonsCoreRCharAnims_r),
-	ptrdecl(0x65E8F1, LoadCannonsCoreKCharAnims_r),
-	ptrdecl(0x65662A, LoadSandOceanCharAnims_r),
-	ptrdecl(0x4DDE49, LoadHiddenBaseCharAnims_r),
-	ptrdecl(0x4A53AC, LoadEggGolemECharAnims_r),
-};
+		buf = MechEggmanAnimList2;
+		WriteData((AnimationInfo**)0x740D50, buf);
+		memcpy(MechEggmanAnimList2, MechEggmanAnimList, MechEggmanAnimList_Length * sizeof(AnimationInfo));
 
-extern "C" __declspec(dllexport) ModInfo SA2ModInfo = { ModLoaderVer, Init, arrayptrandlength(patches), arrayptrandlength(jumps), arrayptrandlength(calls) };
+		buf = MechTailsAnimList2;
+		WriteData((AnimationInfo**)0x740FB0, buf);
+		memcpy(MechTailsAnimList2, MechTailsAnimList, MechTailsAnimList_Length * sizeof(AnimationInfo));
+
+		buf = ChaoWalkerAnimList2;
+		WriteData((AnimationInfo**)0x7411DC, buf);
+		memcpy(ChaoWalkerAnimList2, ChaoWalkerAnimList, ChaoWalkerAnimList_Length * sizeof(AnimationInfo));
+
+		buf = DarkChaoWalkerAnimList2;
+		WriteData((AnimationInfo**)0x7413BC, buf);
+		memcpy(DarkChaoWalkerAnimList2, DarkChaoWalkerAnimList, DarkChaoWalkerAnimList_Length * sizeof(AnimationInfo));
+
+		buf = EggmanAnimList2;
+		WriteData((AnimationInfo**)0x73C2F2, buf);
+		memcpy(EggmanAnimList2, EggmanAnimList, EggmanAnimList_Length * sizeof(AnimationInfo));
+
+		buf = SonicAnimList2;
+		WriteData((AnimationInfo**)0x716F0A, buf);
+		memcpy(SonicAnimList2, SonicAnimList, SonicAnimList_Length * sizeof(AnimationInfo));
+	}
+
+	unsigned __int8 twobytenop[] = { 0x66, 0x90 };
+	unsigned __int8 fivebytenop[] = { 0x66, 0x90, 0x66, 0x90, 0x90 };
+	unsigned __int8 shortjmp[] = { 0xEB };
+
+	PatchInfo patches[] = {
+		patchdecl(0x44E63B, twobytenop), // Dark Chao Walker Life Icon Patch
+		patchdecl(0x459110, twobytenop), // 2P Sound Effects Patch
+		patchdecl(0x45913B, twobytenop), // 2P Voice Patch
+		patchdecl(0x4CD255, twobytenop), // Sonic's Cannon's Core Control Patch
+		patchdecl(0x724261, shortjmp), // Sonic Boss Special Patch
+		patchdecl(0x736211, shortjmp), // Knuckles Boss Special Patch
+		patchdecl(0x7374E4, shortjmp), // Dry Lagoon Turtle Grab Patch
+		patchdecl(0x749921, shortjmp), // Mech Boss Special Patch
+		patchdecl(0x741690, shortjmp), // Dark Chao Walker Fix
+		patchdecl(0x7416DC, shortjmp), // Chao Walker Fix
+		patchdecl(0x728141, fivebytenop), // Knuckles emerald manager
+		patchdecl(0x728491, fivebytenop), // Rouge emerald manager
+		patchdecl(0x7288B7, fivebytenop), // Tikal emerald manager
+		patchdecl(0x728B64, fivebytenop), // Chaos emerald manager
+		patchdecl(0x716E13, twobytenop), // Amy
+		patchdecl(0x716F2C, twobytenop), // Sonic costume
+		patchdecl(0x717373, twobytenop), // Metal Sonic
+		patchdecl(0x71748C, twobytenop), // Shadow costume
+		patchdecl(0x728123, twobytenop), // Tikal
+		patchdecl(0x728241, twobytenop), // Knuckles costume
+		patchdecl(0x728473, twobytenop), // Chaos
+		patchdecl(0x728591, twobytenop), // Rouge costume
+		patchdecl(0x740C61, twobytenop), // Dark Chao Walker
+		patchdecl(0x740D72, twobytenop), // Eggman costume
+		patchdecl(0x740EC1, twobytenop), // Chao Walker
+		patchdecl(0x740FD2, twobytenop) // Tails costume
+	};
+
+	__declspec(dllexport) PatchList Patches = { arrayptrandlength(patches) };
+
+	PointerInfo jumps[] = {
+		ptrdecl(0x458970, sub_458970), // Level Cutscene Function
+		ptrdecl(LoadCharacters, LoadCharacters_r), // LoadCharacters replacement
+		ptrdecl(0x757810, sub_757810), // Somersault Fix 1
+		ptrdecl(0x759A18, loc_759A18), // Somersault Fix 2
+		ptrdecl(LoadStartPositionPtr, LoadStartPosition_r), // LoadStartPosition replacement
+		ptrdecl(0x43DF30, sub_43DF30), // End position
+		ptrdecl(Load2PIntroPos, Load2PIntroPos_r), // 2P Intro position
+		ptrdecl(0x6193D0, sub_6193D0), // Sonic vs Shadow 1
+		ptrdecl(0x4C7100, sub_4C7100), // Sonic vs Shadow 2
+		ptrdecl(0x648690, sub_648690), // Knuckles vs Rouge
+		ptrdecl(0x626680, sub_626680), // Tails vs Eggman 1
+		ptrdecl(0x661CF0, sub_661CF0), // Tails vs Eggman 2
+		ptrdecl(0x727E5B, loc_727E5B), // 2P Race Bar
+		ptrdecl(0x6C63E7, loc_6C63E7), // Goal Ring
+		ptrdecl(0x43C9D0, 0x43CADF), // Tails/Eggman fix
+		ptrdecl(0x472A7D, loc_472A7D), // Title Card textures
+		ptrdecl(0x43EE5F, loc_43EE5F), // End Level voices
+		ptrdecl(0x532029, loc_532029), // Chao World sounds
+		ptrdecl(0x459236, loc_2800440), // Chao World voices
+		ptrdecl(0x72F4D6, KnucklesSunglassesFix),
+		ptrdecl(0x72F531, KnucklesAirNecklaceFix),
+		ptrdecl(0x744914, EggmanLaserBlasterFix),
+		ptrdecl(0x744E02, EggmanLargeCannonFix),
+		ptrdecl(0x748168, TailsLaserBlasterFix),
+		ptrdecl(0x74861A, TailsBazookaFix),
+		ptrdecl(0x4EB2B0, InitSplitscreen)
+	};
+
+	__declspec(dllexport) PointerList Jumps = { arrayptrandlength(jumps) };
+
+	PointerInfo calls[] = {
+		ptrdecl(0x729D16, Knuckles_LevelBounds_r),
+		ptrdecl(0x729DC5, Knuckles_LevelBounds_r),
+		ptrdecl(0x72B0F1, Knuckles_LevelBounds_r),
+		ptrdecl(0x72B2E8, Knuckles_LevelBounds_r),
+		ptrdecl(0x4D45F0, LoadAquaticMineCharAnims_r),
+		ptrdecl(0x63D727, LoadDryLagoonCharAnims_r),
+		ptrdecl(0x4DB351, LoadCannonsCoreRCharAnims_r),
+		ptrdecl(0x65E8F1, LoadCannonsCoreKCharAnims_r),
+		ptrdecl(0x65662A, LoadSandOceanCharAnims_r),
+		ptrdecl(0x4DDE49, LoadHiddenBaseCharAnims_r),
+		ptrdecl(0x4A53AC, LoadEggGolemECharAnims_r),
+	};
+
+	__declspec(dllexport) PointerList Calls = { arrayptrandlength(calls) };
+
+	__declspec(dllexport) ModInfo SA2ModInfo = { ModLoaderVer };
+}
