@@ -1,9 +1,9 @@
-// charsel2.cpp : Defines the exported functions for the DLL application.
+// SA2CharSel.cpp : Defines the exported functions for the DLL application.
 //
 
 #include "stdafx.h"
 #include <cstdio>
-#include "..\SA2ModLoader\include\SA2ModLoader.h"
+#include "..\sa2-mod-loader\SA2ModLoader\include\SA2ModLoader.h"
 
 AnimationInfo TailsAnimList2[ChaosAnimList_Length];
 AnimationInfo MechEggmanAnimList2[ChaosAnimList_Length];
