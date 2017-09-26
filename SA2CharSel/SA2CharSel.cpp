@@ -3,15 +3,10 @@
 
 #include "stdafx.h"
 #include <cstdio>
+#include <vector>
 #include "..\sa2-mod-loader\SA2ModLoader\include\SA2ModLoader.h"
 
-AnimationInfo TailsAnimList2[ChaosAnimList_Length];
-AnimationInfo MechEggmanAnimList2[ChaosAnimList_Length];
-AnimationInfo MechTailsAnimList2[ChaosAnimList_Length];
-AnimationInfo ChaoWalkerAnimList2[ChaosAnimList_Length];
-AnimationInfo DarkChaoWalkerAnimList2[ChaosAnimList_Length];
-AnimationInfo EggmanAnimList2[ChaosAnimList_Length];
-AnimationInfo SonicAnimList2[ChaosAnimList_Length];
+using std::vector;
 
 LevelCutscene *const stru_173A808 = (LevelCutscene*)0x173A808;
 signed int __cdecl sub_458970()
@@ -2096,6 +2091,39 @@ label:
 	}
 }
 
+AnimationInfo TailsAnimList2[ChaosAnimList_Length];
+AnimationInfo MechEggmanAnimList2[ChaosAnimList_Length];
+AnimationInfo MechTailsAnimList2[ChaosAnimList_Length];
+AnimationInfo ChaoWalkerAnimList2[ChaosAnimList_Length];
+AnimationInfo DarkChaoWalkerAnimList2[ChaosAnimList_Length];
+AnimationInfo EggmanAnimList2[ChaosAnimList_Length];
+AnimationInfo SonicAnimList2[ChaosAnimList_Length];
+
+pair<int, int> listend = { -1, 0 };
+template <size_t N>
+void actionlistthing(pair<int, int> *(&order)[N], void **ptr, bool skipmagichands)
+{
+	vector<pair<int, int>> tmp;
+	for (size_t i = 0; i < LengthOfArray(order); i++)
+	{
+		while (order[i]->key != -1)
+		{
+			if (skipmagichands && order[i]->key == 74)
+				goto next;
+			for (size_t j = 0; j < tmp.size(); j++)
+				if (tmp[j].key == order[i]->key)
+					goto next;
+			tmp.emplace_back(*order[i]);
+		next:
+			++order[i];
+		}
+	}
+	tmp.emplace_back(listend);
+	pair<int, int> *buf = new pair<int, int>[tmp.size()];
+	memcpy(buf, tmp.data(), tmp.size() * sizeof(pair<int, int>));
+	WriteData(ptr, (void*)buf);
+}
+
 extern "C"
 {
 	__declspec(dllexport) void Init(const char *path, const HelperFunctions &helperFunctions)
@@ -2127,6 +2155,84 @@ extern "C"
 		buf = SonicAnimList2;
 		WriteData((AnimationInfo**)0x716F0A, buf);
 		memcpy(SonicAnimList2, SonicAnimList, SonicAnimList_Length * sizeof(AnimationInfo));
+
+		pair<int, int> *sonic = (pair<int, int>*)0x96EC80;
+		pair<int, int> *amy = (pair<int, int>*)0x96ECD0;
+		pair<int, int> *shadow = (pair<int, int>*)0x96ED18;
+		pair<int, int> *knuckles = (pair<int, int>*)0x96ED58;
+		pair<int, int> *tikal = (pair<int, int>*)0x96EDB8;
+		pair<int, int> *rouge = (pair<int, int>*)0x96EE10;
+		pair<int, int> *chaos = (pair<int, int>*)0x96EE80;
+		pair<int, int> *mecheggman = (pair<int, int>*)0x96EED8;
+		pair<int, int> *darkchaowalker = (pair<int, int>*)0x96EF08;
+		pair<int, int> *mechtails = (pair<int, int>*)0x96EF38;
+		pair<int, int> *chaowalker = (pair<int, int>*)0x96EF68;
+		pair<int, int> *eggman = (pair<int, int>*)0x96EF98;
+		pair<int, int> *tails = (pair<int, int>*)0x96EFA8;
+		{
+			pair<int, int> *order[] = { sonic, shadow, rouge, knuckles, mechtails, mecheggman };
+			actionlistthing(order, (void**)0x7952E5, false);
+		}
+		{
+			pair<int, int> *order[] = { amy, sonic, shadow, rouge, knuckles, mechtails, mecheggman };
+			actionlistthing(order, (void**)0x7952EC, false);
+		}
+		{
+			pair<int, int> *order[] = { shadow, sonic, rouge, knuckles, mechtails, mecheggman };
+			actionlistthing(order, (void**)0x7952F3, false);
+		}
+		{
+			pair<int, int> *order[] = { tails, mechtails, mecheggman, sonic, shadow, rouge, knuckles };
+			actionlistthing(order, (void**)0x7952FA, true);
+		}
+		{
+			pair<int, int> *order[] = { knuckles, rouge, sonic, shadow, mechtails, mecheggman };
+			actionlistthing(order, (void**)0x795301, true);
+		}
+		{
+			pair<int, int> *order[] = { tikal, rouge, knuckles, sonic, shadow, mechtails, mecheggman };
+			actionlistthing(order, (void**)0x795308, true);
+		}
+		{
+			pair<int, int> *order[] = { rouge, knuckles, sonic, shadow, mechtails, mecheggman };
+			actionlistthing(order, (void**)0x79530F, true);
+		}
+		{
+			pair<int, int> *order[] = { chaos, rouge, knuckles, sonic, shadow, mechtails, mecheggman };
+			actionlistthing(order, (void**)0x795316, true);
+		}
+		{
+			pair<int, int> *order[] = { eggman, mecheggman, mechtails, sonic, shadow, rouge, knuckles };
+			actionlistthing(order, (void**)0x79531D, true);
+		}
+		{
+			pair<int, int> *order[] = { mecheggman, mechtails, sonic, shadow, rouge, knuckles };
+			actionlistthing(order, (void**)0x795324, true);
+		}
+		{
+			pair<int, int> *order[] = { darkchaowalker, mecheggman, mechtails, sonic, shadow, rouge, knuckles };
+			actionlistthing(order, (void**)0x79532B, true);
+		}
+		{
+			pair<int, int> *order[] = { chaowalker, mechtails, mecheggman, sonic, shadow, rouge, knuckles };
+			actionlistthing(order, (void**)0x795332, true);
+		}
+		{
+			pair<int, int> *order[] = { mechtails, mecheggman, sonic, shadow, rouge, knuckles };
+			actionlistthing(order, (void**)0x795339, true);
+		}
+
+		WriteCall((void*)0x729D16, Knuckles_LevelBounds_r);
+		WriteCall((void*)0x729DC5, Knuckles_LevelBounds_r);
+		WriteCall((void*)0x72B0F1, Knuckles_LevelBounds_r);
+		WriteCall((void*)0x72B2E8, Knuckles_LevelBounds_r);
+		WriteCall((void*)0x4D45F0, LoadAquaticMineCharAnims_r);
+		WriteCall((void*)0x63D727, LoadDryLagoonCharAnims_r);
+		WriteCall((void*)0x4DB351, LoadCannonsCoreRCharAnims_r);
+		WriteCall((void*)0x65E8F1, LoadCannonsCoreKCharAnims_r);
+		WriteCall((void*)0x65662A, LoadSandOceanCharAnims_r);
+		WriteCall((void*)0x4DDE49, LoadHiddenBaseCharAnims_r);
+		WriteCall((void*)0x4A53AC, LoadEggGolemECharAnims_r);
 	}
 
 	unsigned __int8 twobytenop[] = { 0x66, 0x90 };
@@ -2194,22 +2300,6 @@ extern "C"
 	};
 
 	__declspec(dllexport) PointerList Jumps = { arrayptrandlength(jumps) };
-
-	PointerInfo calls[] = {
-		ptrdecl(0x729D16, Knuckles_LevelBounds_r),
-		ptrdecl(0x729DC5, Knuckles_LevelBounds_r),
-		ptrdecl(0x72B0F1, Knuckles_LevelBounds_r),
-		ptrdecl(0x72B2E8, Knuckles_LevelBounds_r),
-		ptrdecl(0x4D45F0, LoadAquaticMineCharAnims_r),
-		ptrdecl(0x63D727, LoadDryLagoonCharAnims_r),
-		ptrdecl(0x4DB351, LoadCannonsCoreRCharAnims_r),
-		ptrdecl(0x65E8F1, LoadCannonsCoreKCharAnims_r),
-		ptrdecl(0x65662A, LoadSandOceanCharAnims_r),
-		ptrdecl(0x4DDE49, LoadHiddenBaseCharAnims_r),
-		ptrdecl(0x4A53AC, LoadEggGolemECharAnims_r),
-	};
-
-	__declspec(dllexport) PointerList Calls = { arrayptrandlength(calls) };
 
 	__declspec(dllexport) ModInfo SA2ModInfo = { ModLoaderVer };
 }
