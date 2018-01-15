@@ -1332,8 +1332,11 @@ __declspec(naked) void sub_6193D0()
 	LoadBossCharacter();
 	__asm
 	{
+		push ebx
+		push esi
+		push edi
 		xor ebx, ebx
-			jmp loc_6193F5
+		jmp loc_6193F5
 	}
 }
 
