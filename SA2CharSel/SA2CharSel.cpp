@@ -1556,7 +1556,7 @@ void LoadTitleCardTextures()
 	char *v15; // esi@19
 	char filename[24]; // [sp+Ch] [bp-20h]@27
 
-	if ( TwoPlayerMode )
+	if ( TwoPlayerMode || CurrentLevel == LevelIDs_Route101280 )
 	{
 		switch ( CurrentCharacter )
 		{
@@ -1577,7 +1577,7 @@ void LoadTitleCardTextures()
 	}
 	else
 	{
-		if ( (short)CurrentLevel == LevelIDs_CannonsCoreT )
+		if ( CurrentLevel == LevelIDs_CannonsCoreT )
 			goto LABEL_26;
 		switch ( MainCharObj2[0]->CharID2 )
 		{
