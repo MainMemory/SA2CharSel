@@ -140,11 +140,12 @@ pair<short, short> MechAnimReplacements[] = {
 
 void __cdecl LoadCharacters_r()
 {
+	if (!TwoPlayerMode)
+		*(int *)AltCostume = 0;
 	if (CurrentLevel != LevelIDs_ChaoWorld)
 	{
 		if ((CurrentCharacter & ~1) == Characters_Tails)
 			CurrentCharacter += Characters_MechTails - Characters_Tails;
-		*(int *)AltCostume = 0;
 	}
 	else
 	{
@@ -172,9 +173,9 @@ LoopStart:
 	if (buttons & Buttons_X)
 		*character = Characters_Eggman;
 	if (buttons & Buttons_B)
-		AltCharacter[playerNum] = 1;
+		AltCharacter[playerNum] ^= 1;
 	if (buttons & Buttons_A)
-		AltCostume[playerNum] = 1;
+		AltCostume[playerNum] ^= 1;
 	int repcnt;
 	pair<short, short> *replst;
 	switch (*character)
