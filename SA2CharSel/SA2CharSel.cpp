@@ -2300,7 +2300,7 @@ extern "C"
 		ptrdecl(0x744E02, EggmanLargeCannonFix),
 		ptrdecl(0x748168, TailsLaserBlasterFix),
 		ptrdecl(0x74861A, TailsBazookaFix),
-		ptrdecl(0x4EB2B0, InitSplitscreen)
+		//ptrdecl(0x4EB2B0, InitSplitscreen)
 	};
 
 	__declspec(dllexport) PointerList Jumps = { arrayptrandlength(jumps) };
