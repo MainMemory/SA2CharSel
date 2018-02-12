@@ -4,9 +4,14 @@
 #include "stdafx.h"
 #include <cstdio>
 #include <vector>
-#include "..\sa2-mod-loader\SA2ModLoader\include\SA2ModLoader.h"
+#include <algorithm>
+#include "SA2ModLoader.h"
+#include "IniFile.hpp"
 
 using std::vector;
+using std::string;
+using std::unordered_map;
+using std::transform;
 
 LevelCutscene *const stru_173A808 = (LevelCutscene*)0x173A808;
 signed int __cdecl sub_458970()
@@ -138,10 +143,12 @@ pair<short, short> MechAnimReplacements[] = {
 	{ 215, 15 }
 };
 
+int defaultcharacters[Characters_Amy] = { Characters_Sonic, Characters_Shadow, Characters_Tails, Characters_Eggman, Characters_Knuckles, Characters_Rouge, Characters_MechTails, Characters_MechEggman };
+char defaultcostume = 0;
+char defaultaltchar = 0;
+
 void __cdecl LoadCharacters_r()
 {
-	if (!TwoPlayerMode)
-		*(int *)AltCostume = 0;
 	if (CurrentLevel != LevelIDs_ChaoWorld)
 	{
 		if ((CurrentCharacter & ~1) == Characters_Tails)
@@ -151,6 +158,14 @@ void __cdecl LoadCharacters_r()
 	{
 		if ((CurrentCharacter & ~1) == Characters_MechTails)
 			CurrentCharacter -= Characters_MechTails - Characters_Tails;
+	}
+	if (!TwoPlayerMode)
+	{
+		CurrentCharacter = defaultcharacters[CurrentCharacter];
+		AltCostume[0] = defaultcostume;
+		AltCostume[1] = defaultcostume;
+		AltCharacter[0] = defaultaltchar;
+		AltCharacter[1] = defaultaltchar;
 	}
 	int playerNum = 0;
 	int *character = &CurrentCharacter;
@@ -2128,6 +2143,40 @@ void actionlistthing(pair<int, int> *(&order)[N], void **ptr, bool skipmagichand
 	WriteData(ptr, (void*)buf);
 }
 
+static string trim(const string &s)
+{
+	auto st = s.find_first_not_of(' ');
+	if (st == string::npos)
+		st = 0;
+	auto ed = s.find_last_not_of(' ');
+	if (ed == string::npos)
+		ed = s.size() - 1;
+	return s.substr(st, (ed + 1) - st);
+}
+
+static const unordered_map<string, uint8_t> charnamemap = {
+	{ "sonic", Characters_Sonic },
+	{ "shadow", Characters_Shadow },
+	{ "tails", Characters_Tails },
+	{ "eggman", Characters_Eggman },
+	{ "knuckles", Characters_Knuckles },
+	{ "rouge", Characters_Rouge },
+	{ "mechtails", Characters_MechTails },
+	{ "mecheggman", Characters_MechEggman }
+};
+
+static uint8_t ParseCharacterID(const string &str, Characters def)
+{
+	string s = trim(str);
+	transform(s.begin(), s.end(), s.begin(), ::tolower);
+	auto ch = charnamemap.find(s);
+	if (ch != charnamemap.end())
+		return ch->second;
+	return def;
+}
+
+const string charnames[Characters_Amy] = { "Sonic", "Shadow", "Tails", "Eggman", "Knuckles", "Rouge", "MechTails", "MechEggman" };
+
 extern "C"
 {
 	__declspec(dllexport) void Init(const char *path, const HelperFunctions &helperFunctions)
@@ -2237,6 +2286,13 @@ extern "C"
 		WriteCall((void*)0x65662A, LoadSandOceanCharAnims_r);
 		WriteCall((void*)0x4DDE49, LoadHiddenBaseCharAnims_r);
 		WriteCall((void*)0x4A53AC, LoadEggGolemECharAnims_r);
+		
+		const IniFile *settings = new IniFile(std::string(path) + "\\config.ini");
+		for (int i = 0; i < Characters_Amy; i++)
+			defaultcharacters[i] = ParseCharacterID(settings->getString("1Player", charnames[i]), (Characters)i);
+		defaultcostume = settings->getBool("1Player", "UseAltCostume") ? 1 : 0;
+		defaultaltchar = settings->getBool("1Player", "UseAltCharacter") ? 1 : 0;
+		delete settings;
 	}
 
 	unsigned __int8 twobytenop[] = { 0x66, 0x90 };
