@@ -143,9 +143,10 @@ pair<short, short> MechAnimReplacements[] = {
 	{ 215, 15 }
 };
 
+#define altcostume 0x80u
+#define altcharacter 0x40
+#define charmask ~(altcostume|altcharacter)
 int defaultcharacters[Characters_Amy] = { Characters_Sonic, Characters_Shadow, Characters_Tails, Characters_Eggman, Characters_Knuckles, Characters_Rouge, Characters_MechTails, Characters_MechEggman };
-char defaultcostume = 0;
-char defaultaltchar = 0;
 
 void __cdecl LoadCharacters_r()
 {
@@ -161,11 +162,10 @@ void __cdecl LoadCharacters_r()
 	}
 	if (!TwoPlayerMode)
 	{
-		CurrentCharacter = defaultcharacters[CurrentCharacter];
-		AltCostume[0] = defaultcostume;
-		AltCostume[1] = defaultcostume;
-		AltCharacter[0] = defaultaltchar;
-		AltCharacter[1] = defaultaltchar;
+		int ch = defaultcharacters[CurrentCharacter];
+		CurrentCharacter = ch & charmask;
+		AltCostume[1] = AltCostume[0] = ch & altcostume ? 1 : 0;
+		AltCharacter[1] = AltCharacter[0] = ch & altcharacter ? 1 : 0;
 	}
 	int playerNum = 0;
 	int *character = &CurrentCharacter;
@@ -2162,7 +2162,19 @@ static const unordered_map<string, uint8_t> charnamemap = {
 	{ "knuckles", Characters_Knuckles },
 	{ "rouge", Characters_Rouge },
 	{ "mechtails", Characters_MechTails },
-	{ "mecheggman", Characters_MechEggman }
+	{ "mecheggman", Characters_MechEggman },
+	{ "amy", Characters_Sonic | altcharacter },
+	{ "metalsonic", Characters_Shadow | altcharacter },
+	{ "tikal", Characters_Knuckles | altcharacter },
+	{ "chaos", Characters_Rouge | altcharacter },
+	{ "chaowalker", Characters_MechTails | altcharacter },
+	{ "darkchaowalker", Characters_MechEggman | altcharacter },
+	{ "sonicalt", Characters_Sonic | altcostume },
+	{ "shadowalt", Characters_Shadow | altcostume },
+	{ "knucklesalt", Characters_Knuckles | altcostume },
+	{ "rougealt", Characters_Rouge | altcostume },
+	{ "mechtailsalt", Characters_MechTails | altcostume },
+	{ "mecheggmanalt", Characters_MechEggman | altcostume }
 };
 
 static uint8_t ParseCharacterID(const string &str, Characters def)
@@ -2290,8 +2302,6 @@ extern "C"
 		const IniFile *settings = new IniFile(std::string(path) + "\\config.ini");
 		for (int i = 0; i < Characters_Amy; i++)
 			defaultcharacters[i] = ParseCharacterID(settings->getString("1Player", charnames[i]), (Characters)i);
-		defaultcostume = settings->getBool("1Player", "UseAltCostume") ? 1 : 0;
-		defaultaltchar = settings->getBool("1Player", "UseAltCharacter") ? 1 : 0;
 		delete settings;
 	}
 
