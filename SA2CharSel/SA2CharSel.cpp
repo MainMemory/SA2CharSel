@@ -169,7 +169,7 @@ void __cdecl LoadCharacters_r()
 	}
 	int playerNum = 0;
 	int *character = &CurrentCharacter;
-	int buttons = MenuPressedButtons[0];
+	int buttons = MenuButtons_Held[0];
 LoopStart:
 	if (buttons & Buttons_Left)
 		*character = Characters_Sonic;
@@ -244,7 +244,7 @@ LoopStart:
 	if (playerNum == 1)
 		goto end;
 	playerNum++;
-	buttons = MenuPressedButtons[1];
+	buttons = MenuButtons_Held[1];
 	if (buttons & Buttons_Start)
 		CurrentCharacter2P = CurrentCharacter ^ 1;
 	else if (!TwoPlayerMode)
@@ -325,6 +325,7 @@ NotAmy:
 	}
 }
 
+#pragma warning(disable : 4838)
 StartPosition KnucklesStart[] = {
 	{ LevelIDs_BasicTest },
 	{ LevelIDs_PumpkinHill, 0xD000u, 0xD000u, 0xD000u, { 199, -1361, -1035 }, { 188.63f, -1361, -1045 }, { 208.3f, -1361, -1021.5f } },
@@ -480,22 +481,23 @@ StartPosition TailsStart[] = {
 	{ LevelIDs_RadicalHighway, 0xC000u, 0xC000u, 0xC000u, { 0, -400, -910 }, { -40, -400, -910 }, { 40, -400, -910 } },
 	{ LevelIDs_Invalid }
 };
+#pragma warning(default : 4838)
 
-StartPosition *SonicStartArray[] = { SonicStart, ShadowStart, MechTailsStart, MechEggmanStart, KnucklesStart, RougeStart, SuperSonicStart, SuperShadowStart, TailsStart };
-StartPosition *ShadowStartArray[] = { ShadowStart, SonicStart, MechEggmanStart, MechTailsStart, RougeStart, KnucklesStart, SuperShadowStart, SuperSonicStart, TailsStart };
-StartPosition *MechTailsStartArray[] = { MechTailsStart, MechEggmanStart, SonicStart, ShadowStart, KnucklesStart, RougeStart, SuperSonicStart, SuperShadowStart, TailsStart };
-StartPosition *MechEggmanStartArray[] = { MechEggmanStart, MechTailsStart, ShadowStart, SonicStart, RougeStart, KnucklesStart, SuperShadowStart, SuperSonicStart, TailsStart };
-StartPosition *KnucklesStartArray[] = { KnucklesStart, RougeStart, SonicStart, ShadowStart, MechTailsStart, MechEggmanStart, SuperSonicStart, SuperShadowStart, TailsStart };
-StartPosition *RougeStartArray[] = { RougeStart, KnucklesStart, ShadowStart, SonicStart, MechEggmanStart, MechTailsStart, SuperShadowStart, SuperSonicStart, TailsStart };
-StartPosition *SuperSonicStartArray[] = { SuperSonicStart, SuperShadowStart, SonicStart, ShadowStart, MechTailsStart, MechEggmanStart, KnucklesStart, RougeStart, TailsStart };
-StartPosition *SuperShadowStartArray[] = { SuperShadowStart, SuperSonicStart, ShadowStart, SonicStart, MechEggmanStart, MechTailsStart, RougeStart, KnucklesStart, TailsStart };
-StartPosition *TailsStartArray[] = { TailsStart, SonicStart, ShadowStart, MechTailsStart, MechEggmanStart, KnucklesStart, RougeStart, SuperSonicStart, SuperShadowStart };
-StartPosition *EggmanStartArray[] = { TailsStart, ShadowStart, SonicStart, MechEggmanStart, MechTailsStart, RougeStart, KnucklesStart, SuperShadowStart, SuperSonicStart };
+StartPosition *SonicStartList[] = { SonicStart, ShadowStart, MechTailsStart, MechEggmanStart, KnucklesStart, RougeStart, SuperSonicStart, SuperShadowStart, TailsStart };
+StartPosition *ShadowStartList[] = { ShadowStart, SonicStart, MechEggmanStart, MechTailsStart, RougeStart, KnucklesStart, SuperShadowStart, SuperSonicStart, TailsStart };
+StartPosition *MechTailsStartList[] = { MechTailsStart, MechEggmanStart, SonicStart, ShadowStart, KnucklesStart, RougeStart, SuperSonicStart, SuperShadowStart, TailsStart };
+StartPosition *MechEggmanStartList[] = { MechEggmanStart, MechTailsStart, ShadowStart, SonicStart, RougeStart, KnucklesStart, SuperShadowStart, SuperSonicStart, TailsStart };
+StartPosition *KnucklesStartList[] = { KnucklesStart, RougeStart, SonicStart, ShadowStart, MechTailsStart, MechEggmanStart, SuperSonicStart, SuperShadowStart, TailsStart };
+StartPosition *RougeStartList[] = { RougeStart, KnucklesStart, ShadowStart, SonicStart, MechEggmanStart, MechTailsStart, SuperShadowStart, SuperSonicStart, TailsStart };
+StartPosition *SuperSonicStartList[] = { SuperSonicStart, SuperShadowStart, SonicStart, ShadowStart, MechTailsStart, MechEggmanStart, KnucklesStart, RougeStart, TailsStart };
+StartPosition *SuperShadowStartList[] = { SuperShadowStart, SuperSonicStart, ShadowStart, SonicStart, MechEggmanStart, MechTailsStart, RougeStart, KnucklesStart, TailsStart };
+StartPosition *TailsStartList[] = { TailsStart, SonicStart, ShadowStart, MechTailsStart, MechEggmanStart, KnucklesStart, RougeStart, SuperSonicStart, SuperShadowStart };
+StartPosition *EggmanStartList[] = { TailsStart, ShadowStart, SonicStart, MechEggmanStart, MechTailsStart, RougeStart, KnucklesStart, SuperShadowStart, SuperSonicStart };
 
 int __cdecl LoadStartPosition_ri(int playerNum, NJS_VECTOR *position, Rotation *rotation)
 {
 	ObjectMaster *v1; // eax@1
-	CharObj2 *v4; // eax@7
+	CharObj2Base *v4; // eax@7
 	StartPosition **list;
 	StartPosition *v5; // eax@9
 	int v6; // edx@25
@@ -522,34 +524,34 @@ int __cdecl LoadStartPosition_ri(int playerNum, NJS_VECTOR *position, Rotation *
 			switch ( v4->CharID )
 			{
 			case Characters_Sonic:
-				list = SonicStartArray;
+				list = SonicStartList;
 				break;
 			case Characters_Shadow:
-				list = ShadowStartArray;
+				list = ShadowStartList;
 				break;
 			case Characters_Knuckles:
-				list = KnucklesStartArray;
+				list = KnucklesStartList;
 				break;
 			case Characters_Rouge:
-				list = RougeStartArray;
+				list = RougeStartList;
 				break;
 			case Characters_Tails:
-				list = TailsStartArray;
+				list = TailsStartList;
 				break;
 			case Characters_Eggman:
-				list = EggmanStartArray;
+				list = EggmanStartList;
 				break;
 			case Characters_MechEggman:
-				list = MechEggmanStartArray;
+				list = MechEggmanStartList;
 				break;
 			case Characters_MechTails:
-				list = MechTailsStartArray;
+				list = MechTailsStartList;
 				break;
 			case Characters_SuperSonic:
-				list = SuperSonicStartArray;
+				list = SuperSonicStartList;
 				break;
 			case Characters_SuperShadow:
-				list = SuperShadowStartArray;
+				list = SuperShadowStartList;
 				break;
 			default:
 				return 1;
@@ -566,7 +568,7 @@ int __cdecl LoadStartPosition_ri(int playerNum, NJS_VECTOR *position, Rotation *
 			v6 = (playerNum != 0) + 1;
 		else
 			v6 = 0;
-		for (int i = 0; i < (int)LengthOfArray(SonicStartArray); i++)
+		for (int i = 0; i < (int)LengthOfArray(SonicStartList); i++)
 		{
 			v5 = list[i];
 			if ( v5 )
@@ -609,6 +611,7 @@ __declspec(naked) void LoadStartPosition_r()
 	}
 }
 
+#pragma warning(disable : 4838)
 LevelEndPosition KnucklesEnd[] = {
 	{ LevelIDs_PumpkinHill, 0x8000u, 0xC000u, 0, { 530, -986, -770 }, { -13, 34.8f, 1275 } },
 	{ LevelIDs_AquaticMine, 0, 0, 0, { 0, 130, -365 }, { -600, 211, 443 } },
@@ -668,12 +671,12 @@ LevelEndPosition SonicEnd[] = {
 	{ LevelIDs_Invalid },
 };
 
-LevelEndPosition *SonicEndArray[] = { SonicEnd, ShadowEnd, MechTailsEnd, MechEggmanEnd, KnucklesEnd, RougeEnd };
-LevelEndPosition *ShadowEndArray[] = { ShadowEnd, SonicEnd, MechEggmanEnd, MechTailsEnd, RougeEnd, KnucklesEnd };
-LevelEndPosition *MechTailsEndArray[] = { MechTailsEnd, MechEggmanEnd, SonicEnd, ShadowEnd, KnucklesEnd, RougeEnd };
-LevelEndPosition *MechEggmanEndArray[] = { MechEggmanEnd, MechTailsEnd, ShadowEnd, SonicEnd, RougeEnd, KnucklesEnd };
-LevelEndPosition *KnucklesEndArray[] = { KnucklesEnd, RougeEnd, SonicEnd, ShadowEnd, MechTailsEnd, MechEggmanEnd };
-LevelEndPosition *RougeEndArray[] = { RougeEnd, KnucklesEnd, ShadowEnd, SonicEnd, MechEggmanEnd, MechTailsEnd };
+LevelEndPosition *SonicEndList[] = { SonicEnd, ShadowEnd, MechTailsEnd, MechEggmanEnd, KnucklesEnd, RougeEnd };
+LevelEndPosition *ShadowEndList[] = { ShadowEnd, SonicEnd, MechEggmanEnd, MechTailsEnd, RougeEnd, KnucklesEnd };
+LevelEndPosition *MechTailsEndList[] = { MechTailsEnd, MechEggmanEnd, SonicEnd, ShadowEnd, KnucklesEnd, RougeEnd };
+LevelEndPosition *MechEggmanEndList[] = { MechEggmanEnd, MechTailsEnd, ShadowEnd, SonicEnd, RougeEnd, KnucklesEnd };
+LevelEndPosition *KnucklesEndList[] = { KnucklesEnd, RougeEnd, SonicEnd, ShadowEnd, MechTailsEnd, MechEggmanEnd };
+LevelEndPosition *RougeEndList[] = { RougeEnd, KnucklesEnd, ShadowEnd, SonicEnd, MechEggmanEnd, MechTailsEnd };
 
 StartPosition KnucklesStart2[] = {
 	{ LevelIDs_BasicTest },
@@ -821,15 +824,16 @@ StartPosition SuperSonicStart2[] = {
 	{ LevelIDs_FinalHazard, 0, 0, 0, { 600, -400, 200 }, { 600, -400, 200 }, { 600, -400, 200 } },
 	{ LevelIDs_Invalid }
 };
+#pragma warning(default : 4838)
 
-StartPosition *SonicStartArray2[] = { SonicStart2, ShadowStart2, MechTailsStart2, MechEggmanStart2, KnucklesStart2, RougeStart2, SuperSonicStart2, SuperShadowStart2 };
-StartPosition *ShadowStartArray2[] = { ShadowStart2, SonicStart2, MechEggmanStart2, MechTailsStart2, RougeStart2, KnucklesStart2, SuperShadowStart2, SuperSonicStart2 };
-StartPosition *MechTailsStartArray2[] = { MechTailsStart2, MechEggmanStart2, SonicStart2, ShadowStart2, KnucklesStart2, RougeStart2, SuperSonicStart2, SuperShadowStart2 };
-StartPosition *MechEggmanStartArray2[] = { MechEggmanStart2, MechTailsStart2, ShadowStart2, SonicStart2, RougeStart2, KnucklesStart2, SuperShadowStart2, SuperSonicStart2 };
-StartPosition *KnucklesStartArray2[] = { KnucklesStart2, RougeStart2, SonicStart2, ShadowStart2, MechTailsStart2, MechEggmanStart2, SuperSonicStart2, SuperShadowStart2 };
-StartPosition *RougeStartArray2[] = { RougeStart2, KnucklesStart2, ShadowStart2, SonicStart2, MechEggmanStart2, MechTailsStart2, SuperShadowStart2, SuperSonicStart2 };
-StartPosition *SuperSonicStartArray2[] = { SuperSonicStart2, SuperShadowStart2, SonicStart2, ShadowStart2, MechTailsStart2, MechEggmanStart2, KnucklesStart2, RougeStart2 };
-StartPosition *SuperShadowStartArray2[] = { SuperShadowStart2, SuperSonicStart2, MechEggmanStart2, MechTailsStart2, RougeStart2, KnucklesStart2, ShadowStart2, SonicStart2 };
+StartPosition *SonicStartList2[] = { SonicStart2, ShadowStart2, MechTailsStart2, MechEggmanStart2, KnucklesStart2, RougeStart2, SuperSonicStart2, SuperShadowStart2 };
+StartPosition *ShadowStartList2[] = { ShadowStart2, SonicStart2, MechEggmanStart2, MechTailsStart2, RougeStart2, KnucklesStart2, SuperShadowStart2, SuperSonicStart2 };
+StartPosition *MechTailsStartList2[] = { MechTailsStart2, MechEggmanStart2, SonicStart2, ShadowStart2, KnucklesStart2, RougeStart2, SuperSonicStart2, SuperShadowStart2 };
+StartPosition *MechEggmanStartList2[] = { MechEggmanStart2, MechTailsStart2, ShadowStart2, SonicStart2, RougeStart2, KnucklesStart2, SuperShadowStart2, SuperSonicStart2 };
+StartPosition *KnucklesStartList2[] = { KnucklesStart2, RougeStart2, SonicStart2, ShadowStart2, MechTailsStart2, MechEggmanStart2, SuperSonicStart2, SuperShadowStart2 };
+StartPosition *RougeStartList2[] = { RougeStart2, KnucklesStart2, ShadowStart2, SonicStart2, MechEggmanStart2, MechTailsStart2, SuperShadowStart2, SuperSonicStart2 };
+StartPosition *SuperSonicStartList2[] = { SuperSonicStart2, SuperShadowStart2, SonicStart2, ShadowStart2, MechTailsStart2, MechEggmanStart2, KnucklesStart2, RougeStart2 };
+StartPosition *SuperShadowStartList2[] = { SuperShadowStart2, SuperSonicStart2, MechEggmanStart2, MechTailsStart2, RougeStart2, KnucklesStart2, ShadowStart2, SonicStart2 };
 
 static const void *const sub_46DC70Ptr = (void*)0x46DC70;
 void sub_46DC70(int a1, NJS_VECTOR *a2, char a3)
@@ -851,7 +855,7 @@ DataPointer(void *, off_1DE95E0, 0x1DE95E0);
 
 signed int sub_46DBD0(int a1)
 {
-	CharObj2 *v1; // eax@1
+	CharObj2Base *v1; // eax@1
 	signed int result; // eax@2
 
 	v1 = MainCharObj2[a1];
@@ -867,7 +871,7 @@ signed int LoadEndPosition_r(int playerNum)
 	int v1; // edi@1
 	__int16 v2; // bp@2
 	int v3; // edx@12
-	CharObj1 *v4; // esi@12
+	EntityData1 *v4; // esi@12
 	LevelEndPosition **list;
 	LevelEndPosition *v5; // eax@13
 	int v8; // edi@24
@@ -888,35 +892,35 @@ signed int LoadEndPosition_r(int playerNum)
 	else
 	{
 		v3 = MissionNum == 1 ? 0 : 1;
-		v4 = MainCharacter[playerNum]->Data1;
+		v4 = MainCharacter[playerNum]->Data1.Entity;
 		switch ( sub_46DBD0(playerNum) )
 		{
 		case Characters_Sonic:
 		case Characters_Tails:
 		case Characters_SuperSonic:
-			list = SonicEndArray;
+			list = SonicEndList;
 			break;
 		case Characters_Shadow:
 		case Characters_Eggman:
 		case Characters_SuperShadow:
-			list = ShadowEndArray;
+			list = ShadowEndList;
 			break;
 		case Characters_Knuckles:
-			list = KnucklesEndArray;
+			list = KnucklesEndList;
 			break;
 		case Characters_Rouge:
-			list = RougeEndArray;
+			list = RougeEndList;
 			break;
 		case Characters_MechEggman:
-			list = MechEggmanEndArray;
+			list = MechEggmanEndList;
 			break;
 		case Characters_MechTails:
-			list = MechTailsEndArray;
+			list = MechTailsEndList;
 			break;
 		default:
 			return 0;
 		}
-		for (int i = 0; i < (int)LengthOfArray(SonicEndArray); i++)
+		for (int i = 0; i < (int)LengthOfArray(SonicEndList); i++)
 		{
 			v5 = list[i];
 			while ( v5->Level != LevelIDs_Invalid )
@@ -937,11 +941,11 @@ endloop:
 		v10 = (NJS_VECTOR *)((char *)&v5->Mission2Position + 12 * v3);
 		v4->Position = *v10;
 		v11 = v4->Position.y - 10.0f;
-		*(float *)&MainCharObj2[v1]->field_1A0[20] = v11;
+		*(float *)&MainCharObj2[v1]->field_1A0[5] = v11;
 		MainCharObj2[v1]->field_144[0] = 0;
 		sub_46DC70(v1, &v4->Position, 0);
-		v4->field_2C->CollisionArray->field_2 |= 0x70u;
-		MainCharObj2[v1]->field_70[6] = 0;
+		v4->Collision->CollisionArray->field_2 |= 0x70u;
+		*(int*)&MainCharObj2[v1]->gap_70[24] = 0;
 		v8 = v1 & 1;
 		if ( (short)CurrentLevel == LevelIDs_LostColony )
 		{
@@ -960,8 +964,8 @@ void __cdecl sub_43DF30_i(int playerNum)
 {
 	int v1; // edi@1
 	ObjectMaster *v2; // esi@1
-	CharObj2 *v3; // eax@3
-	CharObj1 *v4; // esi@3
+	CharObj2Base *v3; // eax@3
+	EntityData1 *v4; // esi@3
 	StartPosition **list;
 	StartPosition *v5; // eax@5
 	int v6; // edx@20
@@ -973,36 +977,36 @@ void __cdecl sub_43DF30_i(int playerNum)
 	if ( v2 && LoadEndPosition_r(playerNum) != 1 )
 	{
 		v3 = MainCharObj2[v1];
-		v4 = v2->Data1;
+		v4 = v2->Data1.Entity;
 		if ( v3 )
 		{
 			switch ( v3->CharID )
 			{
 			case Characters_Sonic:
 			case Characters_Tails:
-				list = SonicStartArray2;
+				list = SonicStartList2;
 				break;
 			case Characters_Shadow:
 			case Characters_Eggman:
-				list = ShadowStartArray2;
+				list = ShadowStartList2;
 				break;
 			case Characters_Knuckles:
-				list = KnucklesStartArray2;
+				list = KnucklesStartList2;
 				break;
 			case Characters_Rouge:
-				list = RougeStartArray2;
+				list = RougeStartList2;
 				break;
 			case Characters_MechEggman:
-				list = MechEggmanStartArray2;
+				list = MechEggmanStartList2;
 				break;
 			case Characters_MechTails:
-				list = MechTailsStartArray2;
+				list = MechTailsStartList2;
 				break;
 			case Characters_SuperSonic:
-				list = SuperSonicStartArray2;
+				list = SuperSonicStartList2;
 				break;
 			case Characters_SuperShadow:
-				list = SuperShadowStartArray2;
+				list = SuperShadowStartList2;
 				break;
 			default:
 				goto LABEL_13;
@@ -1024,7 +1028,7 @@ LABEL_13:
 			v6 = 0;
 		if ( list )
 		{
-			for (int i = 0; i < (int)LengthOfArray(SonicStartArray2); i++)
+			for (int i = 0; i < (int)LengthOfArray(SonicStartList2); i++)
 			{
 				v5 = list[i];
 				while ( v5->Level != LevelIDs_Invalid )
@@ -1038,7 +1042,7 @@ LABEL_13:
 						*((int *)*(&off_1DE95E0 + v1) + 7) = v8;
 						v4->Position = (&v5->Position1P)[v6];
 						v10 = v4->Position.y - 10.0f;
-						*(float *)&MainCharObj2[v1]->field_1A0[20] = v10;
+						*(float *)&MainCharObj2[v1]->field_1A0[5] = v10;
 						MainCharObj2[v1]->field_144[0] = 0;
 						goto LABEL_27;
 					}
@@ -1055,8 +1059,8 @@ LABEL_13:
 		*((int *)*(&off_1DE95E0 + v1) + 7) = 0;
 LABEL_27:
 		sub_46DC70(v1, &v4->Position, 0);
-		v4->field_2C->CollisionArray->field_2 |= 0x70u;
-		MainCharObj2[v1]->field_70[6] = 0;
+		v4->Collision->CollisionArray->field_2 |= 0x70u;
+		*(int*)&MainCharObj2[v1]->gap_70[24] = 0;
 		if ( (short)CurrentLevel == LevelIDs_RadicalHighway || (short)CurrentLevel == LevelIDs_LostColony )
 			byte_1DE4664[v1 & 1] = 5;
 		else
@@ -1075,6 +1079,7 @@ __declspec(naked) void sub_43DF30()
 	}
 }
 
+#pragma warning(disable : 4838)
 LevelEndPosition Knuckles2PIntro[] = {
 	{ LevelIDs_PumpkinHill, 0x5800, 0x5800, 0, { -193, -742.38f, -908.24f }, { -193, -742.38f, -908.24f } },
 	{ LevelIDs_DeathChamber, 0, 0xC000u, 0, { 0, 210, 150 }, { 150, 210, 0 } },
@@ -1162,25 +1167,26 @@ LevelEndPosition Sonic2PIntro[] = {
 	{ LevelIDs_DowntownRace, 0xF700u, 0xB00, 0, { -2010, 4793, -5215 }, { -2010, 4793, -5110 } },
 	{ LevelIDs_Invalid },
 };
+#pragma warning(default : 4838)
 
-LevelEndPosition *Sonic2PIntroArray[] = { Sonic2PIntro, Shadow2PIntro, MechTails2PIntro, MechEggman2PIntro, Knuckles2PIntro, Rouge2PIntro };
-LevelEndPosition *Shadow2PIntroArray[] = { Shadow2PIntro, Sonic2PIntro, MechEggman2PIntro, MechTails2PIntro, Rouge2PIntro, Knuckles2PIntro };
-LevelEndPosition *MechTails2PIntroArray[] = { MechTails2PIntro, MechEggman2PIntro, Sonic2PIntro, Shadow2PIntro, Knuckles2PIntro, Rouge2PIntro };
-LevelEndPosition *MechEggman2PIntroArray[] = { MechEggman2PIntro, MechTails2PIntro, Shadow2PIntro, Sonic2PIntro, Rouge2PIntro, Knuckles2PIntro };
-LevelEndPosition *Knuckles2PIntroArray[] = { Knuckles2PIntro, Rouge2PIntro, Sonic2PIntro, Shadow2PIntro, MechTails2PIntro, MechEggman2PIntro };
-LevelEndPosition *Rouge2PIntroArray[] = { Rouge2PIntro, Knuckles2PIntro, Shadow2PIntro, Sonic2PIntro, MechEggman2PIntro, MechTails2PIntro };
+LevelEndPosition *Sonic2PIntroList[] = { Sonic2PIntro, Shadow2PIntro, MechTails2PIntro, MechEggman2PIntro, Knuckles2PIntro, Rouge2PIntro };
+LevelEndPosition *Shadow2PIntroList[] = { Shadow2PIntro, Sonic2PIntro, MechEggman2PIntro, MechTails2PIntro, Rouge2PIntro, Knuckles2PIntro };
+LevelEndPosition *MechTails2PIntroList[] = { MechTails2PIntro, MechEggman2PIntro, Sonic2PIntro, Shadow2PIntro, Knuckles2PIntro, Rouge2PIntro };
+LevelEndPosition *MechEggman2PIntroList[] = { MechEggman2PIntro, MechTails2PIntro, Shadow2PIntro, Sonic2PIntro, Rouge2PIntro, Knuckles2PIntro };
+LevelEndPosition *Knuckles2PIntroList[] = { Knuckles2PIntro, Rouge2PIntro, Sonic2PIntro, Shadow2PIntro, MechTails2PIntro, MechEggman2PIntro };
+LevelEndPosition *Rouge2PIntroList[] = { Rouge2PIntro, Knuckles2PIntro, Shadow2PIntro, Sonic2PIntro, MechEggman2PIntro, MechTails2PIntro };
 
 void __cdecl Load2PIntroPos_ri(int playerNum)
 {
 	ObjectMaster *v1; // eax@1
 	int v2; // edi@1
-	CharObj2 *v3; // eax@2
-	CharObj1 *v4; // esi@2
+	CharObj2Base *v3; // eax@2
+	EntityData1 *v4; // esi@2
 	LevelEndPosition **list;
 	LevelEndPosition *v5; // eax@4
 	bool v6; // edx@11
 	NJS_VECTOR *v8; // ecx@15
-	CharObj2 *v9; // eax@16
+	CharObj2Base *v9; // eax@16
 	int v10; // edi@16
 	char v11; // al@16
 	NJS_VECTOR *v12; // eax@20
@@ -1190,7 +1196,7 @@ void __cdecl Load2PIntroPos_ri(int playerNum)
 	v1 = MainCharacter[playerNum];
 	if ( v1 )
 	{
-		v4 = v1->Data1;
+		v4 = v1->Data1.Entity;
 		v3 = MainCharObj2[v2];
 		if ( v3 )
 		{
@@ -1199,24 +1205,24 @@ void __cdecl Load2PIntroPos_ri(int playerNum)
 			case Characters_Sonic:
 			case Characters_Tails:
 			case Characters_SuperSonic:
-				list = Sonic2PIntroArray;
+				list = Sonic2PIntroList;
 				break;
 			case Characters_Shadow:
 			case Characters_Eggman:
 			case Characters_SuperShadow:
-				list = Shadow2PIntroArray;
+				list = Shadow2PIntroList;
 				break;
 			case Characters_Knuckles:
-				list = Knuckles2PIntroArray;
+				list = Knuckles2PIntroList;
 				break;
 			case Characters_Rouge:
-				list = Rouge2PIntroArray;
+				list = Rouge2PIntroList;
 				break;
 			case Characters_MechEggman:
-				list = MechEggman2PIntroArray;
+				list = MechEggman2PIntroList;
 				break;
 			case Characters_MechTails:
-				list = MechTails2PIntroArray;
+				list = MechTails2PIntroList;
 				break;
 			default:
 				goto LABEL_10;
@@ -1230,7 +1236,7 @@ LABEL_10:
 		v6 = v2 != 0;
 		if ( list )
 		{
-			for (int i = 0; i < (int)LengthOfArray(Sonic2PIntroArray); i++)
+			for (int i = 0; i < (int)LengthOfArray(Sonic2PIntroList); i++)
 			{
 				v5 = list[i];
 				while ( v5->Level != LevelIDs_Invalid )
@@ -1257,9 +1263,9 @@ LABEL_10:
 		v4->Position.x = 0.0;
 LABEL_16:
 		sub_46DC70(v2, v8, 0);
-		v4->field_2C->CollisionArray->field_2 |= 0x70u;
+		v4->Collision->CollisionArray->field_2 |= 0x70u;
 		v11 = *(char*)0x1DE4660;
-		MainCharObj2[v2]->field_70[6] = 0;
+		*(int*)&MainCharObj2[v2]->gap_70[24] = 0;
 		byte_1DE4664[v2 & 1] = v11;
 		v9 = MainCharObj2[v2];
 		v10 = (int)*(&off_1DE95E0 + v2);
@@ -1292,7 +1298,7 @@ __declspec(naked) void Load2PIntroPos_r()
 void __cdecl LoadBossCharacter()
 {
 	int character = CurrentCharacter ^ 1;
-	int buttons = MenuPressedButtons[1];
+	int buttons = MenuButtons_Held[1];
 	if (buttons & Buttons_Left)
 		character = Characters_Sonic;
 	if (buttons & Buttons_Right)
@@ -1384,21 +1390,9 @@ __declspec(naked) void sub_661CF0()
 	__asm jmp loc_661D12
 }
 
-DataPointer(NJS_TEXLIST, TexList_SonicLife, 0x171A654);
-DataPointer(NJS_TEXLIST, TexList_ShadowLife, 0x171A65C);
-DataPointer(NJS_TEXLIST, TexList_TailsLife, 0x171A670);
-DataPointer(NJS_TEXLIST, TexList_EggmanLife, 0x171A690);
-DataPointer(NJS_TEXLIST, TexList_KnucklesLife, 0x171A6A4);
-DataPointer(NJS_TEXLIST, TexList_RougeLife, 0x171A6B8);
-DataPointer(NJS_TEXLIST, TexList_AmyLife, 0x171A6CC);
-DataPointer(NJS_TEXLIST, TexList_MetalLife, 0x171A6E0);
-DataPointer(NJS_TEXLIST, TexList_ChaoLife, 0x171A6F4);
-DataPointer(NJS_TEXLIST, TexList_DarkChaoLife, 0x171A708);
-DataPointer(NJS_TEXLIST, TexList_TikalLife, 0x171A71C);
-DataPointer(NJS_TEXLIST, TexList_ChaosLife, 0x171A730);
-CharObj2 *__cdecl loc_727E5B_i(int playerNum)
+CharObj2Base *__cdecl loc_727E5B_i(int playerNum)
 {
-	CharObj2 *v13 = MainCharObj2[playerNum];
+	CharObj2Base *v13 = MainCharObj2[playerNum];
 	NJS_TEXLIST *v12 = 0;
 	if ( v13 )
 	{
@@ -1643,9 +1637,9 @@ LABEL_26:
 		}
 	}
 	sprintf_s(filename, "MISSIONTEX_%s", v15);
-	LoadTexturePack(filename, &stru_1738D90);
+	LoadTextureList(filename, &stru_1738D90);
 	sprintf_s(filename, "MISSIONTEX_%s2", v15);
-	LoadTexturePack(filename, &stru_1738DB0);
+	LoadTextureList(filename, &stru_1738DB0);
 }
 
 static const void *const loc_472B12 = (void*)0x472B12;
@@ -1660,7 +1654,7 @@ void PlayEndLevelVoice(int playerNum)
 {
 	bool v3;
 	__int16 v6; // cx@12
-	CharObj2 *v14; // edx@29
+	CharObj2Base *v14; // edx@29
 	bool v15; // eax@30
 	int v16; // eax@42
 	bool v17; // eax@62
@@ -2092,11 +2086,11 @@ label:
 }
 
 static const int loc_4EB2B5 = 0x4EB2B5;
-__declspec(naked) void InitSplitscreen()
+__declspec(naked) void InitSplitscreen_r()
 {
 	__asm
 	{
-		mov eax, [MenuPressedButtons]
+		mov eax, [MenuButtons_Held]
 		mov eax, [eax+4]
 		and eax, Buttons_Start
 		jz label
@@ -2338,7 +2332,7 @@ extern "C"
 		patchdecl(0x740FD2, twobytenop) // Tails costume
 	};
 
-	__declspec(dllexport) PatchList Patches = { arrayptrandlength(patches) };
+	__declspec(dllexport) PatchList Patches = { arrayptrandlengthT(patches, int) };
 
 	PointerInfo jumps[] = {
 		ptrdecl(0x458970, sub_458970), // Level Cutscene Function
@@ -2366,10 +2360,10 @@ extern "C"
 		ptrdecl(0x744E02, EggmanLargeCannonFix),
 		ptrdecl(0x748168, TailsLaserBlasterFix),
 		ptrdecl(0x74861A, TailsBazookaFix),
-		//ptrdecl(0x4EB2B0, InitSplitscreen)
+		//ptrdecl(InitSplitscreen, InitSplitscreen_r)
 	};
 
-	__declspec(dllexport) PointerList Jumps = { arrayptrandlength(jumps) };
+	__declspec(dllexport) PointerList Jumps = { arrayptrandlengthT(jumps, int) };
 
 	__declspec(dllexport) ModInfo SA2ModInfo = { ModLoaderVer };
 }
