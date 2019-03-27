@@ -24,15 +24,17 @@ signed int __cdecl sub_458970()
 	else
 		v0 = -1;
 	if (v0 >= Characters_Amy) return 0;
+	if (AltCostume[0]) return 0;
 	if (MainCharObj2[1] && MainCharObj2[1]->CharID2 >= Characters_Amy) return 0;
+	if (MainCharObj2[1] && AltCostume[1]) return 0;
 	if ( *(char*)0x1DEB321 && *(char*)0x1DEB320)
 	{
 		v1 = 0;
 		while ( stru_173A808[v1].Level != (signed __int16)CurrentLevel
-			|| stru_173A808[v1].Character )
+			|| stru_173A808[v1].Character != v0 )
 		{
 			v1++;
-			if ( v1 >= 16 )
+			if ( v1 >= 15 )
 				return 0;
 		}
 		return 1;
