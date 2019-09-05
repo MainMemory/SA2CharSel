@@ -7,6 +7,7 @@
 #include <algorithm>
 #include "SA2ModLoader.h"
 #include "IniFile.hpp"
+#include "BossTitles.h"
 
 using std::vector;
 using std::string;
@@ -1320,7 +1321,7 @@ __declspec(naked) void Load2PIntroPos_r()
 int bosscharacters[Characters_Amy] = { Characters_Sonic, Characters_Shadow, Characters_Tails, Characters_Eggman, Characters_Knuckles, Characters_Rouge, Characters_MechTails, Characters_MechEggman };
 void __cdecl LoadBossCharacter()
 {
-	int character = defaultcharacters[CurrentCharacter ^ 1];
+	int character = bosscharacters[CurrentCharacter ^ 1];
 	AltCostume[1] = character & altcostume ? 1 : 0;
 	AltCharacter[1] = character & altcharacter ? 1 : 0;
 	character &= charmask;
@@ -1876,7 +1877,7 @@ void LoadAquaticMineCharAnims_r()
 	if (CurrentCharacter == Characters_Knuckles)
 		LoadAquaticMineCharAnims();
 	else
-		LoadDryLagoon2PPoolQuestCharAnims();
+		LoadDryLagoon2PCharAnims();
 }
 
 void LoadDryLagoonCharAnims_r()
@@ -1884,7 +1885,7 @@ void LoadDryLagoonCharAnims_r()
 	if (CurrentCharacter == Characters_Rouge)
 		LoadDryLagoonCharAnims();
 	else
-		LoadDryLagoon2PPoolQuestCharAnims();
+		LoadDryLagoon2PCharAnims();
 }
 
 void LoadCannonsCoreRCharAnims_r()
@@ -1892,7 +1893,7 @@ void LoadCannonsCoreRCharAnims_r()
 	if (CurrentCharacter == Characters_Rouge)
 		LoadCannonsCoreRCharAnims();
 	else
-		LoadDryLagoon2PPoolQuestCharAnims();
+		LoadDryLagoon2PCharAnims();
 }
 
 void LoadCannonsCoreKCharAnims_r()
@@ -1900,7 +1901,7 @@ void LoadCannonsCoreKCharAnims_r()
 	if (CurrentCharacter == Characters_Knuckles)
 		LoadCannonsCoreKCharAnims();
 	else
-		LoadDryLagoon2PPoolQuestCharAnims();
+		LoadDryLagoon2PCharAnims();
 }
 
 void LoadSandOceanCharAnims_r()
@@ -2319,6 +2320,8 @@ extern "C"
 		WriteCall((void*)0x65662A, LoadSandOceanCharAnims_r);
 		WriteCall((void*)0x4DDE49, LoadHiddenBaseCharAnims_r);
 		WriteCall((void*)0x4A53AC, LoadEggGolemECharAnims_r);
+
+		InitBossTitles();
 		
 		const IniFile *settings = new IniFile(std::string(path) + "\\config.ini");
 		for (int i = 0; i < Characters_Amy; i++)
