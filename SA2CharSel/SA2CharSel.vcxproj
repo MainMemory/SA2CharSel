@@ -84,11 +84,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BossTitles.h" />
+    <ClInclude Include="RankVoices.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BossTitles.cpp" />
+    <ClCompile Include="RankVoices.cpp" />
     <ClCompile Include="SA2CharSel.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

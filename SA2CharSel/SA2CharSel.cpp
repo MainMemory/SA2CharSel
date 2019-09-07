@@ -8,6 +8,7 @@
 #include "SA2ModLoader.h"
 #include "IniFile.hpp"
 #include "BossTitles.h"
+#include "RankVoices.h"
 
 using std::vector;
 using std::string;
@@ -2322,6 +2323,7 @@ extern "C"
 		WriteCall((void*)0x4A53AC, LoadEggGolemECharAnims_r);
 
 		InitBossTitles();
+		InitRankVoice();
 		
 		const IniFile *settings = new IniFile(std::string(path) + "\\config.ini");
 		for (int i = 0; i < Characters_Amy; i++)
