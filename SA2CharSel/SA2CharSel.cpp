@@ -85,56 +85,7 @@ LoopStart:
 		AltCharacter[playerNum] ^= 1;
 	if (buttons & Buttons_A)
 		AltCostume[playerNum] ^= 1;
-	int repcnt;
-	pair<short, short> *replst;
-	switch (*character)
-	{
-	case Characters_Sonic:
-		LoadSonic(playerNum);
-		repcnt = (int)LengthOfArray(SonicAnimReplacements);
-		replst = SonicAnimReplacements;
-		break;
-	case Characters_Shadow:
-		LoadShadow(playerNum);
-		repcnt = (int)LengthOfArray(SonicAnimReplacements);
-		replst = SonicAnimReplacements;
-		break;
-	case Characters_Tails:
-		LoadTails(playerNum);
-		repcnt = (int)LengthOfArray(OthersAnimReplacements);
-		replst = OthersAnimReplacements;
-		break;
-	case Characters_Eggman:
-		LoadEggman(playerNum);
-		repcnt = (int)LengthOfArray(OthersAnimReplacements);
-		replst = OthersAnimReplacements;
-		break;
-	case Characters_Knuckles:
-		LoadKnuckles(playerNum);
-		repcnt = (int)LengthOfArray(KnucklesAnimReplacements);
-		replst = KnucklesAnimReplacements;
-		break;
-	case Characters_Rouge:
-		LoadRouge(playerNum);
-		repcnt = (int)LengthOfArray(KnucklesAnimReplacements) - 3;
-		replst = KnucklesAnimReplacements;
-		break;
-	case Characters_MechTails:
-		LoadMechTails(playerNum);
-		repcnt = (int)LengthOfArray(MechAnimReplacements);
-		replst = MechAnimReplacements;
-		break;
-	case Characters_MechEggman:
-		LoadMechEggman(playerNum);
-		repcnt = (int)LengthOfArray(MechAnimReplacements);
-		replst = MechAnimReplacements;
-		break;
-	}
-	InitPlayer(playerNum);
-	AnimationInfo *anilst = MainCharObj2[playerNum]->AnimInfo.Animations;
-	for (int i = 0; i < repcnt; i++)
-		if (!CharacterAnimations[anilst[replst[i].key].AnimNum].Animation)
-			anilst[replst[i].key] = anilst[replst[i].value];
+	LoadAnimations(character, playerNum);
 	if (playerNum == 1)
 		goto end;
 	playerNum++;
@@ -146,7 +97,7 @@ LoopStart:
 	character = &CurrentCharacter2P;
 	goto LoopStart;
 end:
-	LoadEmeraldManager_r();
+	LoadEmeraldManager_r_wrapper();
 }
 
 #pragma endregion

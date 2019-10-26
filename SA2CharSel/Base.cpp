@@ -1769,6 +1769,11 @@ __declspec(naked) void LoadEmeraldManager_r()
 	}
 }
 
+void LoadEmeraldManager_r_wrapper()
+{
+	LoadEmeraldManager_r();
+}
+
 #pragma endregion
 #pragma region LevelBounds
 
@@ -1883,7 +1888,121 @@ AnimationInfo DarkChaoWalkerAnimList2[ChaosAnimList_Length];
 AnimationInfo EggmanAnimList2[ChaosAnimList_Length];
 AnimationInfo SonicAnimList2[ChaosAnimList_Length];
 
+pair<short, short> SonicAnimReplacements[] = {
+	{ 211, 1 },
+	{ 212, 77 },
+	{ 215, 15 }
+};
+
+pair<short, short> OthersAnimReplacements[] = {
+	{ 76, 0 },
+	{ 77, 15 },
+	{ 185, 62 },
+	{ 186, 62 },
+	{ 187, 62 },
+	{ 189, 62 },
+	{ 190, 62 },
+	{ 192, 15 },
+	{ 193, 15 },
+	{ 194, 15 },
+	{ 195, 15 },
+	{ 196, 15 },
+	{ 197, 15 },
+	{ 198, 15 },
+	{ 211, 1 },
+	{ 212, 62 },
+	{ 215, 15 }
+};
+
+pair<short, short> KnucklesAnimReplacements[] = {
+	{ 190, 75 },
+	{ 192, 105 },
+	{ 193, 105 },
+	{ 194, 15 },
+	{ 195, 15 },
+	{ 196, 15 },
+	{ 197, 15 },
+	{ 198, 15 },
+	{ 211, 1 },
+	{ 212, 77 },
+	{ 215, 15 }
+};
+
+pair<short, short> MechAnimReplacements[] = {
+	{ 76, 0 },
+	{ 77, 15 },
+	{ 185, 75 },
+	{ 186, 75 },
+	{ 187, 75 },
+	{ 189, 75 },
+	{ 190, 75 },
+	{ 192, 15 },
+	{ 193, 15 },
+	{ 194, 15 },
+	{ 195, 15 },
+	{ 196, 15 },
+	{ 197, 15 },
+	{ 198, 15 },
+	{ 211, 1 },
+	{ 212, 77 },
+	{ 215, 15 }
+};
+
 pair<int, int> listend = { -1, 0 };
+
+void LoadAnimations(int *character, int playerNum)
+{
+	int repcnt;
+	pair<short, short>* replst;
+	switch (*character)
+	{
+	case Characters_Sonic:
+		LoadSonic(playerNum);
+		repcnt = (int)LengthOfArray(SonicAnimReplacements);
+		replst = SonicAnimReplacements;
+		break;
+	case Characters_Shadow:
+		LoadShadow(playerNum);
+		repcnt = (int)LengthOfArray(SonicAnimReplacements);
+		replst = SonicAnimReplacements;
+		break;
+	case Characters_Tails:
+		LoadTails(playerNum);
+		repcnt = (int)LengthOfArray(OthersAnimReplacements);
+		replst = OthersAnimReplacements;
+		break;
+	case Characters_Eggman:
+		LoadEggman(playerNum);
+		repcnt = (int)LengthOfArray(OthersAnimReplacements);
+		replst = OthersAnimReplacements;
+		break;
+	case Characters_Knuckles:
+		LoadKnuckles(playerNum);
+		repcnt = (int)LengthOfArray(KnucklesAnimReplacements);
+		replst = KnucklesAnimReplacements;
+		break;
+	case Characters_Rouge:
+		LoadRouge(playerNum);
+		repcnt = (int)LengthOfArray(KnucklesAnimReplacements) - 3;
+		replst = KnucklesAnimReplacements;
+		break;
+	case Characters_MechTails:
+		LoadMechTails(playerNum);
+		repcnt = (int)LengthOfArray(MechAnimReplacements);
+		replst = MechAnimReplacements;
+		break;
+	case Characters_MechEggman:
+		LoadMechEggman(playerNum);
+		repcnt = (int)LengthOfArray(MechAnimReplacements);
+		replst = MechAnimReplacements;
+		break;
+	}
+	InitPlayer(playerNum);
+	AnimationInfo* anilst = MainCharObj2[playerNum]->AnimInfo.Animations;
+	for (int i = 0; i < repcnt; i++)
+		if (!CharacterAnimations[anilst[replst[i].key].AnimNum].Animation)
+			anilst[replst[i].key] = anilst[replst[i].value];
+}
 
 template <size_t N>
 void actionlistthing(pair<int, int>* (&order)[N], void** ptr, bool skipmagichands)
