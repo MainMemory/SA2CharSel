@@ -1,14 +1,11 @@
 #include "stdafx.h"
 #include "SA2ModLoader.h"
-#include "IniFile.hpp"
 #include "Base.h"
 #include <cstdio>
 #include <vector>
 #include <algorithm>
 
 using std::vector;
-using std::string;
-using std::unordered_map;
 using std::transform;
 
 #pragma region Cutscene stuff
