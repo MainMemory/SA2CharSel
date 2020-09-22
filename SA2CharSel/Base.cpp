@@ -1241,7 +1241,7 @@ DataPointer(NJS_TEXLIST, stru_1738D90, 0x1738D90);
 DataPointer(NJS_TEXLIST, stru_1738DB0, 0x1738DB0);
 void LoadTitleCardTextures()
 {
-	char* v15; // esi@19
+	const char* v15; // esi@19
 	char filename[24]; // [sp+Ch] [bp-20h]@27
 
 	if (TwoPlayerMode || CurrentLevel == LevelIDs_Route101280)
@@ -1529,7 +1529,7 @@ __declspec(naked) void loc_43EE5F()
 ThiscallFunctionPointer(void, sub_435880, (char*), 0x435880);
 void LoadChaoWorldSoundBank()
 {
-	char* v4;
+	const char* v4;
 
 	int v2 = MainCharObj2[0]->CharID2;
 	switch (v2)
@@ -1562,7 +1562,7 @@ void LoadChaoWorldSoundBank()
 		v4 = "chao_chara_ss.mlt";
 		break;
 	}
-	sub_435880(v4);
+	sub_435880((char*)v4);
 }
 
 static const int loc_532054 = 0x532054;
