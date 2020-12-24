@@ -8,7 +8,7 @@ DataArray(int, KnucklesRankVoices, 0x173B7F8, 5);
 DataArray(int, EggmanRankVoices, 0x173B80C, 5);
 DataArray(int, ShadowRankVoices, 0x173B820, 5);
 DataArray(int, RougeRankVoices, 0x173B834, 5);
-DataPointer(int, CurrentLevelRank, 0x174B001);
+DataPointer(char, CurrentLevelRank, 0x174B001);
 void PlayRankVoice_i(int id)
 {
 	int v23 = -1;
